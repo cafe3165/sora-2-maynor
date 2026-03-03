@@ -139,7 +139,7 @@ class Sora2 {
       const response = await this.client.post('/v1/video/generations', {
         prompt: prompt,
         orientation: options.orientation || 'landscape', // landscape, portrait, square
-        duration: options.duration || 5,
+        duration: options.duration || 10,
         resolution: options.resolution || '1080p',
         ...options
       });
