@@ -8,15 +8,24 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
+
         .message {
             animation: fadeIn 0.3s ease-out;
         }
+
         .typing-indicator {
             display: inline-block;
         }
+
         .typing-indicator span {
             display: inline-block;
             width: 8px;
@@ -26,123 +35,148 @@
             margin: 0 2px;
             animation: typing 1.4s infinite;
         }
+
         .typing-indicator span:nth-child(2) {
             animation-delay: 0.2s;
         }
+
         .typing-indicator span:nth-child(3) {
             animation-delay: 0.4s;
         }
+
         @keyframes typing {
-            0%, 60%, 100% { transform: translateY(0); opacity: 0.7; }
-            30% { transform: translateY(-10px); opacity: 1; }
+            0%, 60%, 100% {
+                transform: translateY(0);
+                opacity: 0.7;
+            }
+            30% {
+                transform: translateY(-10px);
+                opacity: 1;
+            }
         }
+
         .gradient-bg {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
+
         .chat-container {
             height: calc(100vh - 80px);
         }
+
         .messages-container {
             height: calc(100% - 100px);
         }
     </style>
 </head>
 <body class="bg-gray-50">
-    <!-- Header -->
-    <header class="gradient-bg text-white shadow-lg">
-        <div class="container mx-auto px-4 py-4">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center space-x-3">
-                    <i class="fas fa-video text-3xl"></i>
-                    <div>
-                        <h1 class="text-2xl font-bold">Sora-2</h1>
-                        <p class="text-sm text-purple-200">AI 对话 & 视频生成</p>
-                    </div>
+<!-- Header -->
+<header class="gradient-bg text-white shadow-lg">
+    <div class="container mx-auto px-4 py-4">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <i class="fas fa-video text-3xl"></i>
+                <div>
+                    <h1 class="text-2xl font-bold">Sora-2</h1>
+                    <p class="text-sm text-purple-200">AI 对话 & 视频生成</p>
                 </div>
-                <div class="flex items-center space-x-3">
-                    <button id="modeToggle" class="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg transition duration-200 flex items-center space-x-2">
-                        <i class="fas fa-comments"></i>
-                        <span>聊天模式</span>
-                    </button>
-                    <button id="clearBtn" class="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg transition duration-200 flex items-center space-x-2">
-                        <i class="fas fa-trash"></i>
-                        <span>清空</span>
-                    </button>
-                </div>
+            </div>
+            <div class="flex items-center space-x-3">
+                <button id="modeToggle"
+                        class="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg transition duration-200 flex items-center space-x-2">
+                    <i class="fas fa-comments"></i>
+                    <span>聊天模式</span>
+                </button>
+                <button id="clearBtn"
+                        class="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg transition duration-200 flex items-center space-x-2">
+                    <i class="fas fa-trash"></i>
+                    <span>清空</span>
+                </button>
             </div>
         </div>
-    </header>
+    </div>
+</header>
 
-    <!-- Main Chat Container -->
-    <div class="container mx-auto px-4 py-6 chat-container">
-        <div class="bg-white rounded-2xl shadow-xl h-full flex flex-col">
-            <!-- Messages Area -->
-            <div id="messagesContainer" class="messages-container overflow-y-auto p-6 space-y-4">
-                <!-- Welcome Message -->
-                <div class="text-center py-12">
-                    <i class="fas fa-robot text-6xl text-purple-500 mb-4"></i>
-                    <h2 class="text-2xl font-bold text-gray-800 mb-2">欢迎使用 Sora-2</h2>
-                    <p class="text-gray-600">开始与 AI 对话吧！</p>
-                </div>
+<!-- Main Chat Container -->
+<div class="container mx-auto px-4 py-6 chat-container">
+    <div class="bg-white rounded-2xl shadow-xl h-full flex flex-col">
+        <!-- Messages Area -->
+        <div id="messagesContainer" class="messages-container overflow-y-auto p-6 space-y-4">
+            <!-- Welcome Message -->
+            <div class="text-center py-12">
+                <i class="fas fa-robot text-6xl text-purple-500 mb-4"></i>
+                <h2 class="text-2xl font-bold text-gray-800 mb-2">欢迎使用 Sora-2</h2>
+                <p class="text-gray-600">开始与 AI 对话吧！</p>
             </div>
+        </div>
 
-            <!-- Input Area -->
-            <div class="border-t p-4">
-                <!-- Chat Form -->
-                <form id="chatForm" class="flex space-x-4">
-                    <input
+        <!-- Input Area -->
+        <div class="border-t p-4">
+            <!-- Chat Form -->
+            <form id="chatForm" class="hidden flex space-x-4">
+                <input
                         type="text"
                         id="userInput"
                         placeholder="输入您的消息..."
                         class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                         autocomplete="off"
-                    />
-                    <button
+                />
+                <button
                         type="submit"
                         id="sendBtn"
                         class="gradient-bg text-white px-6 py-3 rounded-lg hover:opacity-90 transition duration-200 flex items-center space-x-2 font-semibold"
-                    >
-                        <i class="fas fa-paper-plane"></i>
-                        <span>发送</span>
-                    </button>
-                </form>
+                >
+                    <i class="fas fa-paper-plane"></i>
+                    <span>发送</span>
+                </button>
+            </form>
 
-                <!-- Video Form -->
-                <form id="videoForm" class="hidden space-y-3">
+            <!-- Video Form -->
+            <form id="videoForm" class="space-y-3">
                     <textarea
-                        id="videoPrompt"
-                        placeholder="描述您想生成的视频内容..."
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
-                        rows="3"
-                    ></textarea>
-                    <div class="flex items-center space-x-4">
-                        <select id="orientation" class="px-3 py-2 border border-gray-300 rounded-lg">
-                            <option value="landscape">横屏</option>
-                            <option value="portrait">竖屏</option>
-                            <option value="square">方形</option>
-                        </select>
-                        <button
+                            id="videoPrompt"
+                            placeholder="描述您想生成的视频内容..."
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
+                            rows="3"
+                    >两个小男孩在打架</textarea>
+                <div class="flex items-center space-x-4">
+                    <select id="orientation" class="px-3 py-2 border border-gray-300 rounded-lg">
+                        <option value="portrait">竖屏</option>
+                        <option value="landscape">横屏</option>
+                        <option value="square">方形</option>
+                    </select>
+                    <!-- 新增：视频时长选择 -->
+                    <select id="duration"
+                            class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                        <option value="10">10秒</option>
+                        <option value="15">15秒</option>
+                    </select>
+                    <select id="aiModel"
+                            class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                        <option value="maynor1024">maynor1024</option>
+                        <option value="laozhangai">老张AI</option>
+                    </select>
+                    <button
                             type="submit"
                             id="generateBtn"
                             class="gradient-bg text-white px-6 py-2 rounded-lg hover:opacity-90 transition duration-200 flex items-center space-x-2 font-semibold"
-                        >
-                            <i class="fas fa-video"></i>
-                            <span>生成视频</span>
-                        </button>
-                    </div>
-                </form>
-
-                <div id="chatOptions" class="mt-2 flex items-center space-x-4 text-sm text-gray-500">
-                    <label class="flex items-center space-x-2">
-                        <span>Temperature:</span>
-                        <input type="range" id="temperature" min="0" max="1" step="0.1" value="0.7" class="w-24">
-                        <span id="tempValue">0.7</span>
-                    </label>
+                    >
+                        <i class="fas fa-video"></i>
+                        <span>生成视频</span>
+                    </button>
                 </div>
+            </form>
+
+            <div id="chatOptions" class="mt-2 flex items-center space-x-4 text-sm text-gray-500">
+                <label class="flex items-center space-x-2">
+                    <span>Temperature:</span>
+                    <input type="range" id="temperature" min="0" max="1" step="0.1" value="0.7" class="w-24">
+                    <span id="tempValue">0.7</span>
+                </label>
             </div>
         </div>
     </div>
+</div>
 
-    <script src="app.js"></script>
+<script src="app.js"></script>
 </body>
 </html>

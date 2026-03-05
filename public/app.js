@@ -17,6 +17,8 @@ const temperatureSlider = document.getElementById('temperature');
 const tempValue = document.getElementById('tempValue');
 const chatOptions = document.getElementById('chatOptions');
 const orientation = document.getElementById('orientation');
+const duration = document.getElementById('duration');
+const aiModel = document.getElementById('aiModel');
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
@@ -61,7 +63,7 @@ async function handleChatSubmit(e) {
 
     // Add user message
     addMessage('user', message);
-    chatHistory.push({ role: 'user', content: message });
+    chatHistory.push({role: 'user', content: message});
 
     // Clear input
     userInput.value = '';
@@ -98,13 +100,13 @@ async function handleChatSubmit(e) {
 
         try {
             while (true) {
-                const { done, value } = await reader.read();
+                const {done, value} = await reader.read();
                 if (done) {
                     console.log('Stream completed');
                     break;
                 }
 
-                buffer += decoder.decode(value, { stream: true });
+                buffer += decoder.decode(value, {stream: true});
                 const lines = buffer.split('\n');
                 buffer = lines.pop() || '';
 
@@ -145,7 +147,7 @@ async function handleChatSubmit(e) {
 
         // Save final message
         if (fullMessage) {
-            chatHistory.push({ role: 'assistant', content: fullMessage });
+            chatHistory.push({role: 'assistant', content: fullMessage});
             saveChatHistory();
             console.log('Message saved to history');
         } else {
@@ -181,7 +183,9 @@ async function handleVideoSubmit(e) {
             body: JSON.stringify({
                 prompt: prompt,
                 options: {
-                    orientation: orientation.value
+                    orientation: orientation.value,
+                    duration: duration.value,
+                    aiModel: aiModel.value,
                 }
             })
         });
@@ -269,7 +273,7 @@ async function pollVideoTask(taskId) {
                 clearInterval(interval);
             }
         }
-    }, 3000); // 每3秒轮询一次
+    }, 6000); // 每3秒轮询一次
 }
 
 function updateVideoTaskStatus(taskId, data) {
