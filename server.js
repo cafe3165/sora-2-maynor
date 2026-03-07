@@ -3,6 +3,7 @@ import cors from 'cors';
 import path from 'path';
 import {fileURLToPath} from 'url';
 import Sora2 from './sora2.js';
+import Sora2Winfull from "./sora2Winfull.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -17,6 +18,7 @@ app.use(express.static('public'));
 
 // Initialize Sora2 client
 const sora = new Sora2();
+const soraWinfull = new Sora2Winfull();
 
 // API Routes
 app.post('/api/chat', async (req, res) => {
@@ -89,8 +91,14 @@ app.post('/api/video/generate', async (req, res) => {
         if (options.aiModel === "maynor1024") {
             const response = await sora.generateVideoV2(prompt, options);
             res.json(response);
-        } else {
+        } else if (options.aiModel === "laozhangai") {
             const response = await sora.generateVideoV3(prompt, options);
+            res.json(response);
+        } else if (options.aiModel === "winfull") {
+            const response = await soraWinfull.generateVideoWinfull(prompt, options);
+            res.json(response);
+        } else {
+            const response = await sora.generateVideoV2(prompt, options);
             res.json(response);
         }
 
@@ -106,6 +114,17 @@ app.get('/api/video/tasks/:taskId', async (req, res) => {
     try {
         const {taskId} = req.params;
         const response = await sora.getVideoTask(taskId);
+        res.json(response);
+    } catch (error) {
+        console.error('Task query error:', error);
+        res.status(500).json({error: error.message});
+    }
+});
+
+app.get('/api/video/tasks/winfull/:taskId', async (req, res) => {
+    try {
+        const {taskId} = req.params;
+        const response = await soraWinfull.getVideoTaskWinfull(taskId);
         res.json(response);
     } catch (error) {
         console.error('Task query error:', error);

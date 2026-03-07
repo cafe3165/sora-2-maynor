@@ -213,6 +213,7 @@ async function handleVideoSubmit(e) {
 
 function addVideoTask(taskData) {
     const taskId = taskData.id || taskData.task_id;
+    channel = taskData.channel
     videoTasks[taskId] = taskData;
 
     const messageDiv = document.createElement('div');
@@ -247,10 +248,10 @@ function addVideoTask(taskData) {
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
     // 开始轮询任务状态
-    pollVideoTask(taskId);
+    pollVideoTask(taskId, channel);
 }
 
-async function pollVideoTask(taskId) {
+async function pollVideoTask(taskId, channel) {
     const maxAttempts = 60; // 最多轮询60次
     let attempts = 0;
 
@@ -258,14 +259,27 @@ async function pollVideoTask(taskId) {
         attempts++;
 
         try {
-            const response = await fetch(`/api/video/tasks/${taskId}`);
-            const data = await response.json();
+            if (channel === "winfull") {
+                const response = await fetch(`/api/video/tasks/winfull/${taskId}`);
+                const data = await response.json();
 
-            updateVideoTaskStatus(taskId, data);
+                updateVideoTaskStatus(taskId, data);
 
-            if (data.status === 'completed' || data.status === 'failed' || attempts >= maxAttempts) {
-                clearInterval(interval);
+                if (data.status === 'completed' || data.status === 'failed' || attempts >= maxAttempts) {
+                    clearInterval(interval);
+                }
+            } else {
+
+                const response = await fetch(`/api/video/tasks/${taskId}`);
+                const data = await response.json();
+
+                updateVideoTaskStatus(taskId, data);
+
+                if (data.status === 'completed' || data.status === 'failed' || attempts >= maxAttempts) {
+                    clearInterval(interval);
+                }
             }
+
 
         } catch (error) {
             console.error('Polling error:', error);
